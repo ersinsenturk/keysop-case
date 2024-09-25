@@ -9,6 +9,21 @@ const router = createRouter({
       name: "home",
       component: HomeView,
     },
+    {
+      path: "/detail/:id",
+      name: "detail",
+      component: () => import("../views/DetailView.vue"),
+    },
+    {
+      path: "/search/:q",
+      name: "search",
+      component: () => import("../views/SearchView.vue"),
+    },
+    {
+      path: "/profile/:id",
+      name: "profile",
+      component: () => import("../views/ProfileView.vue"),
+    },
   ],
 });
 
