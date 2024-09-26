@@ -5,12 +5,12 @@
         <img src="@/assets/logo.png" alt="" />
       </RouterLink>
       <div
-        class="mx-auto bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg overflow-hidden"
+        class="mx-2 sm:mx-auto basis-full sm:basis-auto bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg overflow-hidden"
       >
         <form @submit.prevent="search" class="flex">
           <input
             type="text"
-            class="block p-2.5 sm:w-96 outline-none"
+            class="block p-2.5 w-full sm:w-96 outline-none"
             placeholder="Search"
             ref="searchInput"
           />

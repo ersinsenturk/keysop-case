@@ -1,9 +1,15 @@
 <template>
   <AppContainer>
     <h1>Search Results for "{{ route.params.q }}"</h1>
-    <div v-if="loading">Loading...</div>
+    <AppSpinner v-if="loading" />
     <div v-else-if="error">{{ error }}</div>
-    <SearchItem v-for="show in data" :show="show.show" :key="show.show.id" />
+    <div v-else-if="data.length === 0">No results found</div>
+    <SearchItem
+      v-else
+      v-for="show in data"
+      :show="show.show"
+      :key="show.show.id"
+    />
   </AppContainer>
 </template>
 

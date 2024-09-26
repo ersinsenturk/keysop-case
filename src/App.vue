@@ -1,6 +1,8 @@
 <template>
-  <AppHeader />
-  <RouterView />
+  <div class="min-h-screen pb-12">
+    <AppHeader />
+    <RouterView />
+  </div>
 </template>
 
 <script setup>

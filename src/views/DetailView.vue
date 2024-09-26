@@ -1,5 +1,5 @@
 <template>
-  <div v-if="loading">Loading...</div>
+  <AppSpinner v-if="loading" />
   <div v-else-if="error">{{ error }}</div>
   <div v-else>
     <div class="bg-slate-400">

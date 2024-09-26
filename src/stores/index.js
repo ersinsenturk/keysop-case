@@ -7,6 +7,7 @@ export const useStore = defineStore("store", () => {
   const selectedGenres = ref([]);
 
   const storeData = (data) => {
+    showsList.value = [];
     data = sortByRating(data);
     showsList.value.push(...data);
     filteredShowsList.value = unref(showsList);
@@ -53,7 +54,7 @@ export const useStore = defineStore("store", () => {
       });
 
       return listWithGenres;
-    } else return splicedList.splice(0, 20);
+    } else return splicedList;
   });
 
   const filteredGenres = computed(() => {
