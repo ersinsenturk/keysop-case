@@ -1,3 +1,31 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  h1 {
+    @apply text-lg sm:text-xl font-bold mb-2;
+  }
+  h2 {
+    @apply text-base sm:text-lg font-bold mb-2;
+  }
+  h3 {
+    @apply text-sm sm:text-base font-bold mb-1;
+  }
+}
+
+@layer utilities {
+  .primary-color {
+    color: #0a91b9;
+  }
+  .bg-primary {
+    background-color: #0a91b9;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}

@@ -2,51 +2,74 @@ import { defineStore } from "pinia";
 import { ref, computed, unref, toRaw } from "vue";
 
 export const useStore = defineStore("store", () => {
-  const list = ref([]);
+  const showsList = ref([]);
+  const filteredShowsList = ref([]);
   const selectedGenres = ref([]);
 
   const storeData = (data) => {
-    list.value.push(...data);
+    data = sortByRating(data);
+    showsList.value.push(...data);
+    filteredShowsList.value = unref(showsList);
+  };
+
+  const sortByRating = (array) => {
+    array.sort((a, b) => b.rating.average - a.rating.average);
+    return array;
+  };
+
+  const minAngle = ref(0);
+  const maxAngle = ref(10);
+  const setRatingRange = (rating) => {
+    const { min, max } = rating;
+    minAngle.value = min;
+    maxAngle.value = max;
   };
 
   const selectGenre = (genre) => {
-    selectedGenres.value.push(genre);
+    if (selectedGenres.value.includes(genre)) {
+      selectedGenres.value = selectedGenres.value.filter(
+        (item) => item !== genre
+      );
+      return;
+    } else selectedGenres.value.push(genre);
   };
 
   const filteredList = computed(() => {
     let splicedList;
 
-    if (selectedGenres.value.length) {
-      const mappedListGenres = list.value.map(
-        (item) => item._embedded.show.genres
-      );
+    splicedList = filteredShowsList.value.filter(
+      (item) =>
+        item.rating.average >= minAngle.value &&
+        item.rating.average <= maxAngle.value
+    );
 
-      const matchingGenres = [];
+    if (selectedGenres.value.length) {
+      const mappedListGenres = splicedList.map((item) => item.genres);
+      const listWithGenres = [];
       mappedListGenres.forEach((subArray, index) => {
         if (subArray.some((item) => selectedGenres.value.includes(item))) {
-          matchingGenres.push(list.value[index]);
+          listWithGenres.push(splicedList[index]);
         }
       });
 
-      splicedList = matchingGenres;
-    } else splicedList = [...list.value].splice(0, 10);
-    return splicedList;
+      return listWithGenres;
+    } else return splicedList.splice(0, 20);
   });
 
   const filteredGenres = computed(() => {
-    let genres = list.value.reduce(
-      (full, item) => full.concat(item._embedded.show.genres),
+    let genres = showsList.value.reduce(
+      (full, item) => full.concat(item.genres),
       []
     );
     const uniqueGenres = [...new Set(genres)];
     return uniqueGenres;
   });
 
-  // türü query olarak yaz watch ile kontrol edip değişince filtre reactive ile kontrol et
-
   return {
     filteredList,
     filteredGenres,
+    selectedGenres,
+    setRatingRange,
     storeData,
     selectGenre,
   };

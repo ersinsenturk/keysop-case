@@ -1,29 +1,22 @@
 <template>
   <AppContainer>
-    <div>
-      <div v-if="loading">Loading...</div>
-      <div v-else-if="error">{{ error }}</div>
-      <div v-else>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div v-for="(genre, index) in filteredGenres" :key="index">
-            <span class="cursor-pointer" @click="selectGenre(genre)">
-              {{ genre }}
-            </span>
-          </div>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div v-for="show in filteredList" :key="show.id">
-            <RouterLink
-              :to="{ name: 'detail', params: { id: show._embedded.show.id } }"
-            >
-              <img
-                class="w-full"
-                :src="show._embedded.show.image?.medium"
-                alt=""
-              />
-              <p>{{ show._embedded.show.name }}</p>
-              <p>{{ show._embedded.show.genres }}</p>
-            </RouterLink>
+    <div class="grid grid-cols-1 lg:grid-cols-6 sm:grid-cols-4 gap-8">
+      <AppSidebar
+        class="col-span-1"
+        :genres="filteredGenres"
+        :selectedGenres="selectedGenres"
+        @select-genre="selectGenre"
+      />
+      <div class="lg:col-span-5 sm:col-span-3">
+        <div v-if="loading">Loading...</div>
+        <div v-else-if="error">{{ error }}</div>
+        <div v-else>
+          <div class="grid grid-cols-1 lg:grid-cols-4 sm:grid-cols-2 gap-8">
+            <ListItem
+              v-for="show in filteredList"
+              :key="show.id"
+              :show="show"
+            />
           </div>
         </div>
       </div>
@@ -33,8 +26,9 @@
 
 <script setup>
 import { onMounted, ref, watch } from "vue";
-import { RouterLink, RouterView } from "vue-router";
 import AppContainer from "@/components/AppContainer.vue";
+import AppSidebar from "@/components/AppSidebar.vue";
+import ListItem from "@/components/ListItem.vue";
 import { useAppFetch } from "@/composables/useFetch";
 import { useStore } from "@/stores";
 import { storeToRefs } from "pinia";
@@ -44,11 +38,11 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 const store = useStore();
 const { storeData, selectGenre } = store;
-const { filteredList, filteredGenres } = storeToRefs(store);
+const { filteredList, filteredGenres, selectedGenres } = storeToRefs(store);
 
-const type = ref();
+const networks = ref();
 onMounted(async () => {
-  const url = API_URL + "/schedule/full";
+  const url = API_URL + "/shows";
   await useFetch(url);
   storeData(data.value);
 });

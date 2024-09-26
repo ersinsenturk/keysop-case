@@ -17,10 +17,26 @@ export const useAppFetch = () => {
       loading.value = false;
     }
   };
+
+  const useFetchAll = async (urls) => {
+    loading.value = true;
+    try {
+      const promises = urls.map((url) => fetch(url));
+      const responses = await Promise.all(promises);
+      data.value = await Promise.all(
+        responses.map((response) => response.json())
+      );
+      loading.value = false;
+    } catch (err) {
+      error.value = err.toString() || "Something went wrong";
+      loading.value = false;
+    }
+  };
   return {
     data,
     loading,
     error,
     useFetch,
+    useFetchAll,
   };
 };
